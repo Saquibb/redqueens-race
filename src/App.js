@@ -13,7 +13,6 @@ function App() {
     var sceneryTimingBackground = {
       duration: 36000,
       iterations: Infinity,
-      playbackRate: -200,
     };
 
     var backgroundMovement = background.current.animate(
@@ -22,6 +21,11 @@ function App() {
     );
     backgroundMovement.currentTime =
       backgroundMovement.effect.getTiming().duration / 2;
+
+    var flyfaster = function () {
+      backgroundMovement.playbackRate += 0.2;
+    };
+    document.addEventListener('click', flyfaster);
   });
   return (
     <div className='container'>
