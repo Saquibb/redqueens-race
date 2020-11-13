@@ -3,6 +3,8 @@ import './App.css';
 
 function App() {
   const background = useRef(null);
+  const foreground = useRef(null);
+
   useLayoutEffect(() => {
     //For Background
     var sceneryFrames = [
@@ -15,12 +17,20 @@ function App() {
       iterations: Infinity,
     };
 
+    var sceneryTimingForeground = {
+      duration: 12000,
+      iterations: Infinity,
+    };
+
     var backgroundMovement = background.current.animate(
       sceneryFrames,
       sceneryTimingBackground
     );
-    backgroundMovement.currentTime =
-      backgroundMovement.effect.getTiming().duration / 2;
+
+    var foregroundMovement = foreground.current.animate(
+      sceneryFrames,
+      sceneryTimingForeground
+    );
 
     var flyfaster = function () {
       backgroundMovement.playbackRate += 0.2;
@@ -38,7 +48,7 @@ function App() {
           />
         </div>
       </div>
-      <div className='scenary'>
+      <div className='scenary' ref={foreground}>
         <img
           className='palm1'
           src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/palm3_small.png'
