@@ -6,6 +6,8 @@ function App() {
   const foreground = useRef(null);
 
   useLayoutEffect(() => {
+    //For Alice
+
     //For Background
     var sceneryFrames = [
       { transform: 'translateX(100%)' },
@@ -34,6 +36,7 @@ function App() {
 
     var flyfaster = function () {
       backgroundMovement.playbackRate += 0.2;
+      foregroundMovement.playbackRate += 0.1;
     };
     document.addEventListener('click', flyfaster);
   });
@@ -42,7 +45,7 @@ function App() {
       <div className='earth'>
         <div className='alice'>
           <img
-            className='redqueen_and_alice'
+            className='aliceSprite'
             src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/sprite_running-alice-queen_small.png'
             alt=' '
           />
