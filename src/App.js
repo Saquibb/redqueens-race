@@ -1,14 +1,33 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import './App.css';
-
 function App() {
-  const background = useRef(null);
+  const aliceSprite = useRef(null);
   const foreground = useRef(null);
+  const background = useRef(null);
 
   useLayoutEffect(() => {
-    //For Alice
+    // Alice
+    var spriteFrames = [
+      { transform: 'translateY(0)' },
+      { transform: 'translateY(-100%)' },
+    ];
 
-    //For Background
+    var alice = aliceSprite.current.animate(spriteFrames, {
+      easing: 'steps(7, end)',
+      direction: 'reverse',
+      duration: 500,
+      playbackRate: 1,
+      iterations: Infinity,
+    });
+
+    setInterval(function () {
+      if (alice.playbackRate > 0.4) {
+        alice.playbackRate -= 0.1;
+        adjustSceneryPlayback();
+      }
+    }, 3000);
+
+    // Scenery
     var sceneryFrames = [
       { transform: 'translateX(100%)' },
       { transform: 'translateX(-100%)' },
@@ -24,66 +43,84 @@ function App() {
       iterations: Infinity,
     };
 
+    var foregroundMovement = foreground.current.animate(
+      sceneryFrames,
+      sceneryTimingForeground
+    );
     var backgroundMovement = background.current.animate(
       sceneryFrames,
       sceneryTimingBackground
     );
 
-    var foregroundMovement = foreground.current.animate(
-      sceneryFrames,
-      sceneryTimingForeground
-    );
+    var sceneries = [foregroundMovement, backgroundMovement];
 
-    var flyfaster = function () {
-      backgroundMovement.playbackRate += 0.2;
-      foregroundMovement.playbackRate += 0.1;
+    var adjustSceneryPlayback = function () {
+      console.log(alice.playbackRate);
+      if (alice.playbackRate < 0.8) {
+        sceneries.forEach(function (anim) {
+          anim.playbackRate = (alice.playbackRate / 2) * -1;
+        });
+      } else if (alice.playbackRate > 1.2) {
+        sceneries.forEach(function (anim) {
+          anim.playbackRate = alice.playbackRate / 2;
+        });
+      } else {
+        sceneries.forEach(function (anim) {
+          anim.playbackRate = 0;
+        });
+      }
     };
-    document.addEventListener('click', flyfaster);
+    adjustSceneryPlayback();
+
+    const goFaster = () => {
+      alice.playbackRate += 0.17;
+      adjustSceneryPlayback();
+    };
+
+    window.addEventListener('click', goFaster);
   });
+
   return (
     <div className='container'>
+      <div className='sky'></div>
       <div className='earth'>
         <div className='alice'>
           <img
-            className='aliceSprite'
+            className='alicesprite'
+            ref={aliceSprite}
             src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/sprite_running-alice-queen_small.png'
             alt=' '
           />
         </div>
       </div>
-      <div className='scenary' ref={foreground}>
+      >
+      <div className='scenery' id='foreground' ref={foreground}>
         <img
-          className='palm1'
+          id='palm1'
           src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/palm3_small.png'
-          alt='palm1'
+          alt=' palm1'
         />
       </div>
-      <div className='background' ref={background}>
+      <div className='scenery background1' ref={background}>
         <img
-          className='ground'
-          src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/bg_earth.jpg'
-          alt='earth'
+          className='r_knight'
+          src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/r_knight_small.png'
+          alt=' r_knight'
         />
-
         <img
-          className='bush'
-          src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/bush_small.png'
-          alt='bush'
+          className='pawn2'
+          src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/r_pawn_upright_small.png'
+          alt=' pawn2'
+        />
+        <img
+          className='treeback'
+          src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/palm1_small.png'
+          alt=' treeback'
         />
         <img
           className='rook_upright'
           src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/w_rook_upright_small.png'
           alt='rook_upright'
-        />
-        <img
-          className='r_knight'
-          src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/r_knight_small.png'
-          alt='r_knight'
-        />
-        <img
-          className='palm2'
-          src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/palm2_small.png'
-          alt='palm2'
         />
       </div>
     </div>
